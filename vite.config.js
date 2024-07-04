@@ -116,6 +116,7 @@ export default defineConfig(({ command, mode }) => {
         authToken: SENTRY_AUTH_TOKEN,
         org: SENTRY_ORG,
         project: SENTRY_PROJECT,
+        telemetry: false,
       }),
     );
   }

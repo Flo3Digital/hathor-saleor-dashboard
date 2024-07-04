@@ -21,6 +21,7 @@ export const SentryAdapter = (config: Config): TrackerMethods => {
           // TODO: rmoeve after Cypress migation
           "ResizeObserver loop limit exceeded",
         ],
+        telemetry: false,
       });
       return true;
     }

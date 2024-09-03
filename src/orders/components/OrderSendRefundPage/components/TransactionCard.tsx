@@ -62,6 +62,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
   ]);
 
   const [value, setValue] = React.useState<number | undefined>();
+  const [loadingForRefund,setLoadingForRefund] = React.useState<boolean>(false);
 
   const [sendRefund, { status, loading, error, data }] =
     useOrderSendRefundMutation({
@@ -83,15 +84,30 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
     if (typeof value === "number" && transaction?.id) {
-      await sendRefund();
-      // const refundResponse = await fetch("https://flo3-dummy-payment-app.vercel.app/api/hathor-refund", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ transactionId: transaction.id, amount: value }),
-      // });
-      // }
+      // await sendRefund();
+      setLoadingForRefund(() => true);
+      const refundResponse = await fetch("https://flo3-dummy-payment-app.vercel.app/api/hathor-refund", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": "L//LnEX4Pfyx97Puawp4Ep315AZzr0iQGBZMJltrCE0=",
+        },
+        body: JSON.stringify({ orderId: orderId, amount: value , currency: (transaction?.authorizedAmount?.currency || "HKD")}),
+      });
+
+      const data = await refundResponse.json();
+      if(data.status === "pending"){
+        const message = data.errorMessage;
+        window.alert(message);
+      }else if(data.status === "error"){
+        const message = data.errorMessage;
+        window.alert(message);
+      }else if(data.status === "success"){
+        //success received
+        window.alert("Refund request recieved.");
+      }
+      setLoadingForRefund(() => false);
+      }
     };
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = e => {
@@ -134,7 +150,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
                 id={inputId}
                 aria-invalid={!!submitError ? "true" : "false"}
                 aria-describedby={errorId}
-                disabled={loading}
+                disabled={loadingForRefund}
                 className={classes.input}
                 label={intl.formatMessage(refundPageMessages.refundAmount)}
                 name="amount"

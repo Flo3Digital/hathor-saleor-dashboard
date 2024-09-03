@@ -77,12 +77,22 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
       },
     });
 
+  //fixed
+  //replace the refund process with our api//
+
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async e => {
     e.preventDefault();
     if (typeof value === "number" && transaction?.id) {
       await sendRefund();
-    }
-  };
+      // const refundResponse = await fetch("https://flo3-dummy-payment-app.vercel.app/api/hathor-refund", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ transactionId: transaction.id, amount: value }),
+      // });
+      // }
+    };
 
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = e => {
     const value = parseFloat(e.target.value);

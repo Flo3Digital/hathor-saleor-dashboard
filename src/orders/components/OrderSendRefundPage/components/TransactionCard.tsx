@@ -161,7 +161,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
               <ConfirmButton
                 type="submit"
                 variant="primary"
-                transitionState={status}
+                transitionState={loadingForRefund ? "loading" : "default"}
                 disabled={value <= 0 || typeof value !== "number"}
               >
                 <FormattedMessage {...refundPageMessages.requestRefund} />
